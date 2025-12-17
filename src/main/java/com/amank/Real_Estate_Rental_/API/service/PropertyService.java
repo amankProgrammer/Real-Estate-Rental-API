@@ -30,4 +30,31 @@ public class PropertyService {
     public List<Property> filterProperties(String location, Double minPrice, Double maxPrice) {
         return repository.findByLocationContainingAndPriceBetween(location, minPrice, maxPrice);
     }
+
+    public Property getPropertyById(Long id) {
+        return repository.findById(id).orElse(null);
+    }
+
+    public Property updateProperty(Long id, Property newDetails) {
+        Property existingProperty = repository.findById(id).orElse(null);
+
+        if (existingProperty != null) {
+            existingProperty.setTitle(newDetails.getTitle());
+            existingProperty.setPrice(newDetails.getPrice());
+            existingProperty.setLocation(newDetails.getLocation());
+            existingProperty.setType(newDetails.getType());
+            existingProperty.setOwnerContact(newDetails.getOwnerContact());
+
+            return repository.save(existingProperty);
+        }
+        return null;
+    }
+
+    public boolean deleteProperty(Long id) {
+        if (repository.existsById(id)) {
+            repository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
 }
